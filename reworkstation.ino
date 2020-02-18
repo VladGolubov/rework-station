@@ -82,6 +82,27 @@ PIDController pid_solder;
 PIDController pid_fen;
 PIDController pid_dh;
 
+
+byte degree[8] = // кодируем символ градуса
+{
+B00111,
+B00101,
+B00111,
+B00000,
+B00000,
+B00000,
+B00000,
+};
+byte degree2[8] = // кодируем символ градуса
+{
+B00111,
+B00101,
+B00111,
+B01100,
+B10000,
+B10000,
+B01100,
+};
 /*рабочий вариант отображения
 
   lcd.setCursor(0, 0);
@@ -207,22 +228,22 @@ void display_lcd(){
     lcd.print("H:"); 
   
 if(digitalRead(SW1) == HIGH){  
-  lcd.setCursor(1,0);
+  lcd.setCursor(2,0);
    lcd.print(s_thermo);
    //delay(10);
-  lcd.setCursor(1,1);
+  lcd.setCursor(2,1);
    lcd.print(s_res);
  //  delay(10);
    }else{
     if(s_thermo == error_temp && alarm_temp){  
-    lcd.setCursor(1,0);
+    lcd.setCursor(2,0);
     lcd.print("Err");
-    lcd.setCursor(1,1);
+    lcd.setCursor(2,1);
     lcd.print("Err");
   }else{
-  lcd.setCursor(1,0);
+  lcd.setCursor(2,0);
     lcd.print("off");
-    lcd.setCursor(1,1);
+    lcd.setCursor(2,1);
     lcd.print("off");
   }
    }
@@ -232,48 +253,52 @@ if(digitalRead(SW1) == HIGH){
     lcd.setCursor(5,1);
     lcd.print("H:");
 if(digitalRead(SW2) == HIGH){
-  lcd.setCursor(6,0);
+  lcd.setCursor(7,0);
   lcd.print(f_thermo);
  // delay(10);
-  lcd.setCursor(6,1);
+  lcd.setCursor(7,1);
   lcd.print(f_res);
 //  delay(10);
 }else{
   if(f_thermo == error_temp  && alarm_temp){  
-    lcd.setCursor(6,0);
+    lcd.setCursor(7,0);
     lcd.print("Err");
-    lcd.setCursor(6,1);
+    lcd.setCursor(7,1);
     lcd.print("Err");
   }else{
-    lcd.setCursor(6,0);
+    lcd.setCursor(7,0);
     lcd.print("off");
-    lcd.setCursor(6,1);
+    lcd.setCursor(7,1);
     lcd.print("off");
   }
 }
 
  //Downheating
+   lcd.setCursor(15,0);
+  lcd.print("\2C");
+   lcd.setCursor(15,1);
+  lcd.print("\1C");
   lcd.setCursor(10,0);
     lcd.print("D:");
     lcd.setCursor(10,1);
     lcd.print("H:"); 
  if(digitalRead(SW4) == HIGH){
-  lcd.setCursor(11,0);
+  lcd.setCursor(12,0);
    lcd.print(dh_thermo);
  //  delay(10);
-  lcd.setCursor(11,1);
+  lcd.setCursor(12,1);
    lcd.print(dh_res);
  //  delay(10);
  }else{
   if(dh_thermo == error_temp && alarm_temp){  
-    lcd.setCursor(11,0);
+    lcd.setCursor(12,0);
     lcd.print("Err");
-    lcd.setCursor(11,1);
+    lcd.setCursor(12,1);
     lcd.print("Err");
   }else{
-   lcd.setCursor(11,0);
+   lcd.setCursor(12,0);
     lcd.print("off");
-    lcd.setCursor(11,1);
+    lcd.setCursor(12,1);
     lcd.print("off"); 
   //Downheating
   }
@@ -311,6 +336,9 @@ void setup() {
   lcd.print("Rework Station");
   delay(1000);
   lcd.clear();
+
+   lcd.createChar(1, degree); // Создаем символ под номером 1
+   lcd.createChar(2, degree2); // Создаем символ под номером 1
   
    pid_solder.begin(); 
    pid_fen.begin();   
